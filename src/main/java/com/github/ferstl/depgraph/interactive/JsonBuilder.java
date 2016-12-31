@@ -126,13 +126,15 @@ public class JsonBuilder implements GraphBuilder<GraphNode> {
 
     private final GraphNode from;
     private final GraphNode to;
+    private final NodeResolution nodeResolution;
+    private final Set<String> scopes;
 
-    public Dependency(GraphNode from, GraphNode to) {
+    public Dependency(GraphNode from, GraphNode to, NodeResolution nodeResolution, Set<String> scopes) {
       this.from = from;
       this.to = to;
+      this.nodeResolution = nodeResolution;
+      this.scopes = scopes;
     }
-
-
   }
 
 
@@ -159,7 +161,7 @@ public class JsonBuilder implements GraphBuilder<GraphNode> {
     if (from != null && to != null) {
       this.artifacts.putIfAbsent(from.getArtifact(), from);
       this.artifacts.putIfAbsent(to.getArtifact(), to);
-      this.dependencies.add(new Dependency(getEffectiveNode(from), getEffectiveNode(to)));
+      this.dependencies.add(new Dependency(getEffectiveNode(from), getEffectiveNode(to), to.getResolution(), to.getScopes()));
     }
 
     return this;
@@ -197,8 +199,8 @@ public class JsonBuilder implements GraphBuilder<GraphNode> {
       DependencyJson dependencyJson = new DependencyJson();
       dependencyJson.from = dependency.from.getId();
       dependencyJson.to = dependency.to.getId();
-      dependencyJson.resolution = dependency.to.getResolution();
-      dependencyJson.scopes = dependency.to.getScopes();
+      dependencyJson.resolution = dependency.nodeResolution;
+      dependencyJson.scopes = dependency.scopes;
 
       graphJson.getDependencies().add(dependencyJson);
     }
