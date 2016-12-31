@@ -20,6 +20,7 @@ import java.util.Deque;
 import java.util.Set;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+import com.github.ferstl.depgraph.GraphBuilder;
 import com.github.ferstl.depgraph.dot.DotBuilder;
 import static java.util.EnumSet.allOf;
 
@@ -31,13 +32,13 @@ import static java.util.EnumSet.allOf;
  */
 class DotBuildingVisitor implements org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor, org.apache.maven.shared.dependency.tree.traversal.DependencyNodeVisitor {
 
-  private final DotBuilder<GraphNode> dotBuilder;
+  private final GraphBuilder<GraphNode> dotBuilder;
   private final Deque<GraphNode> stack;
   private final ArtifactFilter globalFilter;
   private final ArtifactFilter targetFilter;
   private final Set<NodeResolution> includedResolutions;
 
-  DotBuildingVisitor(DotBuilder<GraphNode> dotBuilder, ArtifactFilter globalFilter, ArtifactFilter targetFilter, Set<NodeResolution> includedResolutions) {
+  DotBuildingVisitor(GraphBuilder<GraphNode> dotBuilder, ArtifactFilter globalFilter, ArtifactFilter targetFilter, Set<NodeResolution> includedResolutions) {
     this.dotBuilder = dotBuilder;
     this.stack = new ArrayDeque<>();
     this.globalFilter = globalFilter;
@@ -45,7 +46,7 @@ class DotBuildingVisitor implements org.apache.maven.shared.dependency.graph.tra
     this.includedResolutions = includedResolutions;
   }
 
-  DotBuildingVisitor(DotBuilder<GraphNode> dotBuilder, ArtifactFilter targetFilter) {
+  DotBuildingVisitor(GraphBuilder<GraphNode> dotBuilder, ArtifactFilter targetFilter) {
     this(dotBuilder, DoNothingArtifactFilter.INSTANCE, targetFilter, allOf(NodeResolution.class));
   }
 

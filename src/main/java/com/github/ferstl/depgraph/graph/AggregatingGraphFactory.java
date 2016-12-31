@@ -20,8 +20,8 @@ import java.util.List;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
+import com.github.ferstl.depgraph.GraphBuilder;
 import com.github.ferstl.depgraph.dot.AttributeBuilder;
-import com.github.ferstl.depgraph.dot.DotBuilder;
 import com.github.ferstl.depgraph.dot.EdgeAttributeRenderer;
 
 /**
@@ -33,10 +33,10 @@ public class AggregatingGraphFactory implements GraphFactory {
 
   private final GraphBuilderAdapter graphBuilderAdapter;
   private final ArtifactFilter globalFilter;
-  private final DotBuilder<GraphNode> dotBuilder;
+  private final GraphBuilder<GraphNode> dotBuilder;
   private final boolean includeParentProjects;
 
-  public AggregatingGraphFactory(GraphBuilderAdapter graphBuilderAdapter, ArtifactFilter globalFilter, DotBuilder<GraphNode> dotBuilder, boolean includeParentProjects) {
+  public AggregatingGraphFactory(GraphBuilderAdapter graphBuilderAdapter, ArtifactFilter globalFilter, GraphBuilder<GraphNode> dotBuilder, boolean includeParentProjects) {
     this.graphBuilderAdapter = graphBuilderAdapter;
     this.globalFilter = globalFilter;
     this.dotBuilder = dotBuilder;
@@ -62,7 +62,7 @@ public class AggregatingGraphFactory implements GraphFactory {
     return this.dotBuilder.toString();
   }
 
-  private void buildModuleTree(MavenProject parentProject, DotBuilder<GraphNode> dotBuilder) {
+  private void buildModuleTree(MavenProject parentProject, GraphBuilder<GraphNode> dotBuilder) {
     @SuppressWarnings("unchecked") Collection<MavenProject> collectedProjects = parentProject.getCollectedProjects();
     for (MavenProject collectedProject : collectedProjects) {
       MavenProject child = collectedProject;

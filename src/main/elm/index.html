@@ -1,0 +1,19 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Dependency Graph</title>
+</head>
+
+<body>
+  <div id="main"></div>
+    <script src="graph.jsonp"></script>
+    <script src="main.js"></script>
+    <script>
+        var node = document.getElementById('main');
+        var app = Elm.Main.embed(node, graph);
+    </script>
+</body>
+</html>

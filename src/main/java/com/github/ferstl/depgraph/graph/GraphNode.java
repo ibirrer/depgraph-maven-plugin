@@ -18,6 +18,7 @@ package com.github.ferstl.depgraph.graph;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.maven.artifact.Artifact;
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
@@ -33,6 +34,8 @@ import com.google.common.collect.ImmutableSet;
  */
 public final class GraphNode {
 
+  private static AtomicInteger nextId = new AtomicInteger(0);
+  private final int id;
   private org.apache.maven.shared.dependency.graph.DependencyNode graphNode;
   private org.apache.maven.shared.dependency.tree.DependencyNode treeNode;
   private final Artifact artifact;
@@ -68,6 +71,7 @@ public final class GraphNode {
     this.artifact = artifact;
     this.resolution = resolution;
     this.scopes.add(artifact.getScope());
+    this.id = nextId.getAndIncrement();
   }
 
   public void merge(GraphNode other) {
@@ -76,6 +80,10 @@ public final class GraphNode {
     }
 
     this.scopes.addAll(other.getScopes());
+  }
+
+  public int getId() {
+    return this.id;
   }
 
   public Artifact getArtifact() {
