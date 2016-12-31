@@ -23,12 +23,6 @@ main =
 -- MODEL
 
 
-type alias Model =
-    { graph : ( Dict Node String, Set Edge )
-    , selectedNode : Maybe Node
-    }
-
-
 type alias Artifact =
     { id : Int
     , artifactId : String
@@ -50,29 +44,54 @@ type alias DependencyGraph =
     }
 
 
+type alias GraphLookup =
+    { artifactDict : Dict Int Artifact
+    , dependencyDict : Dict Edge Dependency
+    }
+
+
+type alias EdgeFilter =
+    { showIncluded : Bool
+    , showConflicts : Bool
+    , showDuplicates : Bool
+    }
+
+
+type alias Model =
+    { graphLookup : GraphLookup
+    , selectedNode : Maybe Node
+    , edgeFilter : EdgeFilter
+    }
+
+
 init : DependencyGraph -> ( Model, Cmd Node )
 init dependencyGraph =
-    ( Model
-        ( labels dependencyGraph.artifacts
-        , edges dependencyGraph.dependencies
-        )
-        Nothing
+    ( { graphLookup = toGraphLookup dependencyGraph
+      , selectedNode = Nothing
+      , edgeFilter =
+            { showIncluded = True
+            , showConflicts = False
+            , showDuplicates = False
+            }
+      }
     , Cmd.none
     )
 
 
-labels : List Artifact -> Dict Node String
-labels artifacts =
-    artifacts
-        |> List.map (\artifact -> ( artifact.id, artifact.artifactId ++ "@" ++ artifact.version ))
-        |> Dict.fromList
+toGraphLookup : DependencyGraph -> GraphLookup
+toGraphLookup dependencyGraph =
+    let
+        artifactDict =
+            dependencyGraph.artifacts
+                |> List.map (\artifact -> ( artifact.id, artifact ))
+                |> Dict.fromList
 
-
-edges : List Dependency -> Set Edge
-edges dependencies =
-    dependencies
-        |> List.map (\dependency -> ( dependency.from, dependency.to ))
-        |> Set.fromList
+        dependencyDict =
+            dependencyGraph.dependencies
+                |> List.map (\dependency -> ( ( dependency.from, dependency.to ), dependency ))
+                |> Dict.fromList
+    in
+        GraphLookup artifactDict dependencyDict
 
 
 
@@ -97,15 +116,37 @@ layout =
 
 
 view : Model -> Html Node
-view { graph, selectedNode } =
-    drawGraph graph selectedNode
-
-
-drawGraph : ( Dict Int String, Set Edge ) -> Maybe Node -> Html Node
-drawGraph ( labels, edges ) selectedNode =
+view model =
     let
-        toLabel =
-            (flip Dict.get) labels >> Maybe.withDefault ""
+        toLabel : Node -> String
+        toLabel node =
+            Dict.get node model.graphLookup.artifactDict
+                |> Maybe.map (\artifact -> (artifact.artifactId ++ ":" ++ artifact.version))
+                |> Maybe.withDefault "not found"
+
+        edgeFilter : Edge -> Dependency -> Bool
+        edgeFilter key dependency =
+            [ if model.edgeFilter.showIncluded then
+                Just "INCLUDED"
+              else
+                Nothing
+            , if model.edgeFilter.showConflicts then
+                Just "OMITTED_FOR_CONFLICT"
+              else
+                Nothing
+            , if model.edgeFilter.showDuplicates then
+                Just "OMITTED_FOR_DUPLICATE"
+              else
+                Nothing
+            ]
+                |> List.filterMap identity
+                |> List.member dependency.resolution
+
+        edges =
+            model.graphLookup.dependencyDict
+                |> Dict.filter edgeFilter
+                |> Dict.keys
+                |> Set.fromList
 
         graphView =
             case AcyclicDigraph.fromEdges edges of
@@ -115,7 +156,7 @@ drawGraph ( labels, edges ) selectedNode =
                 Ok graph ->
                     let
                         paint =
-                            selectedNode
+                            model.selectedNode
                                 |> Maybe.map
                                     (ArcDiagram.Distance.basicPaint toLabel graph)
                                 |> Maybe.withDefault

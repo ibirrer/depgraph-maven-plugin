@@ -1,0 +1,1261 @@
+var graph = {
+  "artifacts" : [ {
+    "id" : 0,
+    "artifactId" : "spring-petclinic",
+    "version" : "1.4.2"
+  }, {
+    "id" : 1,
+    "artifactId" : "spring-boot-starter-actuator",
+    "version" : "1.4.2.RELEASE"
+  }, {
+    "id" : 2,
+    "artifactId" : "spring-boot-starter",
+    "version" : "1.4.2.RELEASE"
+  }, {
+    "id" : 3,
+    "artifactId" : "spring-boot",
+    "version" : "1.4.2.RELEASE"
+  }, {
+    "id" : 4,
+    "artifactId" : "spring-core",
+    "version" : "4.3.4.RELEASE"
+  }, {
+    "id" : 6,
+    "artifactId" : "spring-context",
+    "version" : "4.3.4.RELEASE"
+  }, {
+    "id" : 9,
+    "artifactId" : "spring-boot-autoconfigure",
+    "version" : "1.4.2.RELEASE"
+  }, {
+    "id" : 13,
+    "artifactId" : "spring-boot-starter-logging",
+    "version" : "1.4.2.RELEASE"
+  }, {
+    "id" : 14,
+    "artifactId" : "logback-classic",
+    "version" : "1.1.7"
+  }, {
+    "id" : 15,
+    "artifactId" : "logback-core",
+    "version" : "1.1.7"
+  }, {
+    "id" : 17,
+    "artifactId" : "slf4j-api",
+    "version" : "1.7.21"
+  }, {
+    "id" : 20,
+    "artifactId" : "jcl-over-slf4j",
+    "version" : "1.7.21"
+  }, {
+    "id" : 24,
+    "artifactId" : "jul-to-slf4j",
+    "version" : "1.7.21"
+  }, {
+    "id" : 28,
+    "artifactId" : "log4j-over-slf4j",
+    "version" : "1.7.21"
+  }, {
+    "id" : 35,
+    "artifactId" : "snakeyaml",
+    "version" : "1.17"
+  }, {
+    "id" : 38,
+    "artifactId" : "spring-boot-actuator",
+    "version" : "1.4.2.RELEASE"
+  }, {
+    "id" : 43,
+    "artifactId" : "jackson-databind",
+    "version" : "2.8.4"
+  }, {
+    "id" : 51,
+    "artifactId" : "spring-boot-starter-cache",
+    "version" : "1.4.2.RELEASE"
+  }, {
+    "id" : 55,
+    "artifactId" : "spring-aop",
+    "version" : "4.3.4.RELEASE"
+  }, {
+    "id" : 56,
+    "artifactId" : "spring-beans",
+    "version" : "4.3.4.RELEASE"
+  }, {
+    "id" : 67,
+    "artifactId" : "spring-expression",
+    "version" : "4.3.4.RELEASE"
+  }, {
+    "id" : 72,
+    "artifactId" : "spring-context-support",
+    "version" : "4.3.4.RELEASE"
+  }, {
+    "id" : 81,
+    "artifactId" : "spring-boot-starter-data-jpa",
+    "version" : "1.4.2.RELEASE"
+  }, {
+    "id" : 84,
+    "artifactId" : "spring-boot-starter-aop",
+    "version" : "1.4.2.RELEASE"
+  }, {
+    "id" : 89,
+    "artifactId" : "aspectjweaver",
+    "version" : "1.8.9"
+  }, {
+    "id" : 92,
+    "artifactId" : "spring-boot-starter-jdbc",
+    "version" : "1.4.2.RELEASE"
+  }, {
+    "id" : 95,
+    "artifactId" : "tomcat-jdbc",
+    "version" : "8.5.6"
+  }, {
+    "id" : 96,
+    "artifactId" : "tomcat-juli",
+    "version" : "8.5.6"
+  }, {
+    "id" : 99,
+    "artifactId" : "spring-jdbc",
+    "version" : "4.3.4.RELEASE"
+  }, {
+    "id" : 104,
+    "artifactId" : "spring-tx",
+    "version" : "4.3.4.RELEASE"
+  }, {
+    "id" : 108,
+    "artifactId" : "hibernate-core",
+    "version" : "5.0.11.Final"
+  }, {
+    "id" : 109,
+    "artifactId" : "jboss-logging",
+    "version" : "3.3.0.Final"
+  }, {
+    "id" : 111,
+    "artifactId" : "hibernate-jpa-2.1-api",
+    "version" : "1.0.0.Final"
+  }, {
+    "id" : 113,
+    "artifactId" : "javassist",
+    "version" : "3.20.0-GA"
+  }, {
+    "id" : 115,
+    "artifactId" : "antlr",
+    "version" : "2.7.7"
+  }, {
+    "id" : 117,
+    "artifactId" : "jandex",
+    "version" : "2.0.0.Final"
+  }, {
+    "id" : 119,
+    "artifactId" : "dom4j",
+    "version" : "1.6.1"
+  }, {
+    "id" : 120,
+    "artifactId" : "xml-apis",
+    "version" : "1.4.01"
+  }, {
+    "id" : 123,
+    "artifactId" : "hibernate-commons-annotations",
+    "version" : "5.0.1.Final"
+  }, {
+    "id" : 128,
+    "artifactId" : "hibernate-entitymanager",
+    "version" : "5.0.11.Final"
+  }, {
+    "id" : 142,
+    "artifactId" : "javax.transaction-api",
+    "version" : "1.2"
+  }, {
+    "id" : 144,
+    "artifactId" : "spring-data-jpa",
+    "version" : "1.10.5.RELEASE"
+  }, {
+    "id" : 145,
+    "artifactId" : "spring-data-commons",
+    "version" : "1.12.5.RELEASE"
+  }, {
+    "id" : 155,
+    "artifactId" : "spring-orm",
+    "version" : "4.3.4.RELEASE"
+  }, {
+    "id" : 184,
+    "artifactId" : "spring-aspects",
+    "version" : "4.3.4.RELEASE"
+  }, {
+    "id" : 189,
+    "artifactId" : "spring-boot-starter-web",
+    "version" : "1.4.2.RELEASE"
+  }, {
+    "id" : 192,
+    "artifactId" : "spring-boot-starter-tomcat",
+    "version" : "1.4.2.RELEASE"
+  }, {
+    "id" : 193,
+    "artifactId" : "tomcat-embed-core",
+    "version" : "8.5.6"
+  }, {
+    "id" : 195,
+    "artifactId" : "tomcat-embed-el",
+    "version" : "8.5.6"
+  }, {
+    "id" : 197,
+    "artifactId" : "tomcat-embed-websocket",
+    "version" : "8.5.6"
+  }, {
+    "id" : 202,
+    "artifactId" : "hibernate-validator",
+    "version" : "5.2.4.Final"
+  }, {
+    "id" : 203,
+    "artifactId" : "validation-api",
+    "version" : "1.1.0.Final"
+  }, {
+    "id" : 207,
+    "artifactId" : "classmate",
+    "version" : "1.3.3"
+  }, {
+    "id" : 211,
+    "artifactId" : "jackson-annotations",
+    "version" : "2.8.4"
+  }, {
+    "id" : 213,
+    "artifactId" : "jackson-core",
+    "version" : "2.8.4"
+  }, {
+    "id" : 216,
+    "artifactId" : "spring-web",
+    "version" : "4.3.4.RELEASE"
+  }, {
+    "id" : 226,
+    "artifactId" : "spring-webmvc",
+    "version" : "4.3.4.RELEASE"
+  }, {
+    "id" : 241,
+    "artifactId" : "spring-boot-starter-thymeleaf",
+    "version" : "1.4.2.RELEASE"
+  }, {
+    "id" : 246,
+    "artifactId" : "thymeleaf-spring4",
+    "version" : "3.0.2.RELEASE"
+  }, {
+    "id" : 247,
+    "artifactId" : "thymeleaf",
+    "version" : "3.0.2.RELEASE"
+  }, {
+    "id" : 248,
+    "artifactId" : "attoparser",
+    "version" : "2.0.1.RELEASE"
+  }, {
+    "id" : 250,
+    "artifactId" : "unbescape",
+    "version" : "1.1.4.RELEASE"
+  }, {
+    "id" : 258,
+    "artifactId" : "thymeleaf-layout-dialect",
+    "version" : "2.0.4"
+  }, {
+    "id" : 259,
+    "artifactId" : "thymeleaf-expression-processor",
+    "version" : "1.1.1"
+  }, {
+    "id" : 267,
+    "artifactId" : "spring-boot-starter-test",
+    "version" : "1.4.2.RELEASE"
+  }, {
+    "id" : 268,
+    "artifactId" : "spring-boot-test",
+    "version" : "1.4.2.RELEASE"
+  }, {
+    "id" : 272,
+    "artifactId" : "spring-boot-test-autoconfigure",
+    "version" : "1.4.2.RELEASE"
+  }, {
+    "id" : 278,
+    "artifactId" : "json-path",
+    "version" : "2.2.0"
+  }, {
+    "id" : 279,
+    "artifactId" : "json-smart",
+    "version" : "2.2.1"
+  }, {
+    "id" : 280,
+    "artifactId" : "accessors-smart",
+    "version" : "1.1"
+  }, {
+    "id" : 281,
+    "artifactId" : "asm",
+    "version" : "5.0.3"
+  }, {
+    "id" : 288,
+    "artifactId" : "junit",
+    "version" : "4.12"
+  }, {
+    "id" : 289,
+    "artifactId" : "hamcrest-core",
+    "version" : "1.3"
+  }, {
+    "id" : 292,
+    "artifactId" : "assertj-core",
+    "version" : "2.5.0"
+  }, {
+    "id" : 294,
+    "artifactId" : "mockito-core",
+    "version" : "1.10.19"
+  }, {
+    "id" : 297,
+    "artifactId" : "objenesis",
+    "version" : "2.1"
+  }, {
+    "id" : 302,
+    "artifactId" : "hamcrest-library",
+    "version" : "1.3"
+  }, {
+    "id" : 306,
+    "artifactId" : "jsonassert",
+    "version" : "1.3.0"
+  }, {
+    "id" : 307,
+    "artifactId" : "json",
+    "version" : "20140107"
+  }, {
+    "id" : 312,
+    "artifactId" : "spring-test",
+    "version" : "4.3.4.RELEASE"
+  }, {
+    "id" : 317,
+    "artifactId" : "hsqldb",
+    "version" : "2.3.3"
+  }, {
+    "id" : 319,
+    "artifactId" : "mysql-connector-java",
+    "version" : "5.1.40"
+  }, {
+    "id" : 321,
+    "artifactId" : "cache-api",
+    "version" : "1.0.0"
+  }, {
+    "id" : 323,
+    "artifactId" : "ehcache",
+    "version" : "3.1.3"
+  }, {
+    "id" : 327,
+    "artifactId" : "webjars-locator",
+    "version" : "0.32"
+  }, {
+    "id" : 328,
+    "artifactId" : "webjars-locator-core",
+    "version" : "0.30"
+  }, {
+    "id" : 331,
+    "artifactId" : "commons-lang3",
+    "version" : "3.1"
+  }, {
+    "id" : 333,
+    "artifactId" : "commons-compress",
+    "version" : "1.9"
+  }, {
+    "id" : 339,
+    "artifactId" : "jquery",
+    "version" : "2.2.4"
+  }, {
+    "id" : 341,
+    "artifactId" : "jquery-ui",
+    "version" : "1.11.4"
+  }, {
+    "id" : 342,
+    "artifactId" : "jquery",
+    "version" : "1.11.1"
+  }, {
+    "id" : 345,
+    "artifactId" : "bootstrap",
+    "version" : "3.3.6"
+  }, {
+    "id" : 349,
+    "artifactId" : "spring-boot-devtools",
+    "version" : "1.4.2.RELEASE"
+  } ],
+  "dependencies" : [ {
+    "from" : 0,
+    "to" : 1,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 1,
+    "to" : 2,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 2,
+    "to" : 3,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 3,
+    "to" : 4,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 3,
+    "to" : 6,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 2,
+    "to" : 9,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 9,
+    "to" : 3,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 2,
+    "to" : 13,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 13,
+    "to" : 14,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 14,
+    "to" : 15,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 14,
+    "to" : 17,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 13,
+    "to" : 20,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 20,
+    "to" : 17,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 13,
+    "to" : 24,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 24,
+    "to" : 17,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 13,
+    "to" : 28,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 28,
+    "to" : 17,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 2,
+    "to" : 4,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 2,
+    "to" : 35,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "runtime" ]
+  }, {
+    "from" : 1,
+    "to" : 38,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 38,
+    "to" : 3,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 38,
+    "to" : 9,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 38,
+    "to" : 43,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 38,
+    "to" : 4,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 38,
+    "to" : 6,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 0,
+    "to" : 51,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 51,
+    "to" : 2,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 51,
+    "to" : 6,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 6,
+    "to" : 55,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 55,
+    "to" : 56,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 55,
+    "to" : 4,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 6,
+    "to" : 56,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 56,
+    "to" : 4,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 6,
+    "to" : 4,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 6,
+    "to" : 67,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 67,
+    "to" : 4,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 51,
+    "to" : 72,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 72,
+    "to" : 56,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 72,
+    "to" : 6,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 72,
+    "to" : 4,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 0,
+    "to" : 81,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 81,
+    "to" : 2,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 81,
+    "to" : 84,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 84,
+    "to" : 2,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 84,
+    "to" : 55,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 84,
+    "to" : 89,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 81,
+    "to" : 92,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 92,
+    "to" : 2,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 92,
+    "to" : 95,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 95,
+    "to" : 96,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 92,
+    "to" : 99,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 99,
+    "to" : 56,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 99,
+    "to" : 4,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 99,
+    "to" : 104,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 81,
+    "to" : 108,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 108,
+    "to" : 109,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 108,
+    "to" : 111,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 108,
+    "to" : 113,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 108,
+    "to" : 115,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 108,
+    "to" : 117,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 108,
+    "to" : 119,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 119,
+    "to" : 120,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 108,
+    "to" : 123,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 123,
+    "to" : 109,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 81,
+    "to" : 128,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 128,
+    "to" : 109,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 128,
+    "to" : 108,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 128,
+    "to" : 119,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 128,
+    "to" : 123,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 128,
+    "to" : 111,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 128,
+    "to" : 113,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 81,
+    "to" : 142,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 81,
+    "to" : 144,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 144,
+    "to" : 145,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 145,
+    "to" : 4,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 145,
+    "to" : 56,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 145,
+    "to" : 17,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 145,
+    "to" : 20,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 144,
+    "to" : 155,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 155,
+    "to" : 56,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 155,
+    "to" : 4,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 155,
+    "to" : 99,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 155,
+    "to" : 104,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 144,
+    "to" : 6,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 144,
+    "to" : 55,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 144,
+    "to" : 104,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 104,
+    "to" : 56,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 104,
+    "to" : 4,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 144,
+    "to" : 56,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 144,
+    "to" : 4,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 144,
+    "to" : 17,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 144,
+    "to" : 20,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 81,
+    "to" : 184,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 184,
+    "to" : 89,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 0,
+    "to" : 189,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 189,
+    "to" : 2,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 189,
+    "to" : 192,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 192,
+    "to" : 193,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 192,
+    "to" : 195,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 192,
+    "to" : 197,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 197,
+    "to" : 193,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 189,
+    "to" : 202,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 202,
+    "to" : 203,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 202,
+    "to" : 109,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 202,
+    "to" : 207,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 189,
+    "to" : 43,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 43,
+    "to" : 211,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 43,
+    "to" : 213,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 189,
+    "to" : 216,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 216,
+    "to" : 55,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 216,
+    "to" : 56,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 216,
+    "to" : 6,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 216,
+    "to" : 4,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 189,
+    "to" : 226,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 226,
+    "to" : 55,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 226,
+    "to" : 56,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 226,
+    "to" : 6,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 226,
+    "to" : 4,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 226,
+    "to" : 67,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 226,
+    "to" : 216,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 0,
+    "to" : 241,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 241,
+    "to" : 2,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 241,
+    "to" : 189,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 241,
+    "to" : 246,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 246,
+    "to" : 247,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 247,
+    "to" : 248,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 247,
+    "to" : 250,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 247,
+    "to" : 17,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 246,
+    "to" : 17,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 241,
+    "to" : 258,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 258,
+    "to" : 259,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 259,
+    "to" : 247,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 258,
+    "to" : 247,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 0,
+    "to" : 267,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "test" ]
+  }, {
+    "from" : 267,
+    "to" : 268,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "test" ]
+  }, {
+    "from" : 268,
+    "to" : 3,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 267,
+    "to" : 272,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "test" ]
+  }, {
+    "from" : 272,
+    "to" : 268,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "test" ]
+  }, {
+    "from" : 272,
+    "to" : 9,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 267,
+    "to" : 278,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "test" ]
+  }, {
+    "from" : 278,
+    "to" : 279,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "test" ]
+  }, {
+    "from" : 279,
+    "to" : 280,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "test" ]
+  }, {
+    "from" : 280,
+    "to" : 281,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "test" ]
+  }, {
+    "from" : 278,
+    "to" : 17,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 267,
+    "to" : 288,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "test" ]
+  }, {
+    "from" : 288,
+    "to" : 289,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "test" ]
+  }, {
+    "from" : 267,
+    "to" : 292,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "test" ]
+  }, {
+    "from" : 267,
+    "to" : 294,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "test" ]
+  }, {
+    "from" : 294,
+    "to" : 289,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "test" ]
+  }, {
+    "from" : 294,
+    "to" : 297,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "test" ]
+  }, {
+    "from" : 267,
+    "to" : 289,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "test" ]
+  }, {
+    "from" : 267,
+    "to" : 302,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "test" ]
+  }, {
+    "from" : 302,
+    "to" : 289,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "test" ]
+  }, {
+    "from" : 267,
+    "to" : 306,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "test" ]
+  }, {
+    "from" : 306,
+    "to" : 307,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "test" ]
+  }, {
+    "from" : 267,
+    "to" : 4,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 267,
+    "to" : 312,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "test" ]
+  }, {
+    "from" : 312,
+    "to" : 4,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 0,
+    "to" : 317,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "runtime" ]
+  }, {
+    "from" : 0,
+    "to" : 319,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "runtime" ]
+  }, {
+    "from" : 0,
+    "to" : 321,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 0,
+    "to" : 323,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 323,
+    "to" : 17,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 0,
+    "to" : 327,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 327,
+    "to" : 328,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 328,
+    "to" : 17,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 328,
+    "to" : 331,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 328,
+    "to" : 333,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 327,
+    "to" : 43,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 0,
+    "to" : 339,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 0,
+    "to" : 341,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 341,
+    "to" : 342,
+    "resolution" : "OMITTED_FOR_CONFLICT",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 0,
+    "to" : 345,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 345,
+    "to" : 342,
+    "resolution" : "OMITTED_FOR_CONFLICT",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 0,
+    "to" : 349,
+    "resolution" : "INCLUDED",
+    "scopes" : [ "runtime" ]
+  }, {
+    "from" : 349,
+    "to" : 3,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  }, {
+    "from" : 349,
+    "to" : 9,
+    "resolution" : "OMITTED_FOR_DUPLICATE",
+    "scopes" : [ "compile" ]
+  } ]
+};

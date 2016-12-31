@@ -1,0 +1,19 @@
+{
+  "name": "depgraph-maven-plugin",
+  "version": "0.0.1",
+  "description": "Interactive dependency graph for maven projects",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "live": "elm-live Main.elm --output=main.js --open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ferstl/depgraph-maven-plugin.git"
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "elm": "^0.18.0",
+    "elm-live": "^2.6.1"
+  }
+}

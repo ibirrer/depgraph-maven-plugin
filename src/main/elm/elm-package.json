@@ -1,8 +1,8 @@
 {
-    "version": "1.0.0",
+    "version": "0.0.1",
     "summary": "Interactive dependency graph for maven projects",
     "repository": "https://github.com/ferstl/depgraph-maven-plugin.git",
-    "license": "Apache 2",
+    "license": "Apache-2.0",
     "source-directories": [
         "."
     ],
