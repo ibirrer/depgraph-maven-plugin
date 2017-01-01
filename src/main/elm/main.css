@@ -1,0 +1,67 @@
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+#main {
+  font-family: monospace;
+  margin: 0;
+  padding: 0;
+  color: #333;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+#graph {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 200px;
+  overflow: auto;
+}
+
+#filters {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 200px;
+
+  background-color: #f8f8f8;
+  border-left: 1px solid #e7e7e7;
+}
+
+#filters header {
+  padding: 5px 20px;
+  border-bottom: 1px solid #e7e7e7;
+  font-size: 20px
+}
+
+label {
+  display: block;
+  margin-left: 10px;
+}
+
+fieldset {
+  border: none;
+  padding: 20px;
+  margin: 0;
+}
+
+fieldset .title {
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+
+

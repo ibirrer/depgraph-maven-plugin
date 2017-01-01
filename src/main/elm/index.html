@@ -3,16 +3,15 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-
   <title>Dependency Graph</title>
+  <link href="main.css" rel="stylesheet">
 </head>
 
-<body>
-  <div id="main"></div>
+<body id="app">
     <script src="graph.jsonp"></script>
     <script src="main.js"></script>
     <script>
-        var node = document.getElementById('main');
+        var node = document.getElementById('app');
         var app = Elm.Main.embed(node, graph);
     </script>
 </body>

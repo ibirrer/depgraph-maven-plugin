@@ -4,12 +4,13 @@ import AcyclicDigraph exposing (Node, Edge, Cycle, AcyclicDigraph)
 import ArcDiagram
 import ArcDiagram.Distance
 import Dict exposing (Dict)
-import Html exposing (Html)
-import Html.Attributes
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Html.Events exposing (..)
 import Set exposing (Set)
 
 
-main : Program DependencyGraph Model Node
+main : Program DependencyGraph Model Msg
 main =
     Html.programWithFlags
         { init = init
@@ -64,7 +65,7 @@ type alias Model =
     }
 
 
-init : DependencyGraph -> ( Model, Cmd Node )
+init : DependencyGraph -> ( Model, Cmd Msg )
 init dependencyGraph =
     ( { graphLookup = toGraphLookup dependencyGraph
       , selectedNode = Nothing
@@ -98,9 +99,48 @@ toGraphLookup dependencyGraph =
 -- UPDATE
 
 
-update : Node -> Model -> ( Model, Cmd Node )
-update node model =
-    ( { model | selectedNode = model.selectedNode |> toggleMaybe node }, Cmd.none )
+type NodeResolution
+    = OmittedForConflict
+    | OmittedForDuplicate
+
+
+type Msg
+    = ToggleResolution NodeResolution
+    | SelectGraphNode Node
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        SelectGraphNode node ->
+            ( { model
+                | selectedNode =
+                    model.selectedNode |> toggleMaybe node
+              }
+            , Cmd.none
+            )
+
+        ToggleResolution nodeResolution ->
+            ( { model
+                | edgeFilter =
+                    updateEdgeFilter nodeResolution model.edgeFilter
+              }
+            , Cmd.none
+            )
+
+
+updateEdgeFilter : NodeResolution -> EdgeFilter -> EdgeFilter
+updateEdgeFilter nodeResolution edgeFilter =
+    case nodeResolution of
+        OmittedForDuplicate ->
+            { edgeFilter | showDuplicates = not edgeFilter.showDuplicates }
+
+        OmittedForConflict ->
+            { edgeFilter | showConflicts = not edgeFilter.showConflicts }
+
+
+
+-- VIEW
 
 
 defaultLayout : ArcDiagram.Layout
@@ -115,8 +155,39 @@ layout =
     }
 
 
-view : Model -> Html Node
+view : Model -> Html Msg
 view model =
+    div [ id "main" ]
+        [ div [ id "graph" ] [ drawGraph model |> Html.map (\node -> SelectGraphNode node) ]
+        , div [ id "filters" ]
+            [ header [] [ text "Filter" ]
+            , fieldset []
+                [ div [ class "title" ] [ text "Resolution" ]
+                , label []
+                    [ input
+                        [ type_ "checkbox"
+                        , checked model.edgeFilter.showDuplicates
+                        , onClick (ToggleResolution OmittedForDuplicate)
+                        ]
+                        []
+                    , text "Duplicates"
+                    ]
+                , label []
+                    [ input
+                        [ type_ "checkbox"
+                        , checked model.edgeFilter.showConflicts
+                        , onClick (ToggleResolution OmittedForConflict)
+                        ]
+                        []
+                    , text "Conflicts"
+                    ]
+                ]
+            ]
+        ]
+
+
+drawGraph : Model -> Html Node
+drawGraph model =
     let
         toLabel : Node -> String
         toLabel node =
@@ -126,10 +197,7 @@ view model =
 
         edgeFilter : Edge -> Dependency -> Bool
         edgeFilter key dependency =
-            [ if model.edgeFilter.showIncluded then
-                Just "INCLUDED"
-              else
-                Nothing
+            [ Just "INCLUDED"
             , if model.edgeFilter.showConflicts then
                 Just "OMITTED_FOR_CONFLICT"
               else
@@ -162,19 +230,9 @@ view model =
                                 |> Maybe.withDefault
                                     (ArcDiagram.basicPaint toLabel)
                     in
-                        ArcDiagram.view
-                            layout
-                            paint
-                            graph
+                        ArcDiagram.view layout paint graph
     in
-        Html.div
-            [ Html.Attributes.style
-                [ ( "margin", "40px" )
-                , ( "font-family", "Helvetica, Arial, san-serif" )
-                ]
-            ]
-            [ graphView
-            ]
+        graphView
 
 
 viewCycles : (Node -> String) -> List Cycle -> Html a
