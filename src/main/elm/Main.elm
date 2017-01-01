@@ -2,11 +2,13 @@ module Main exposing (..)
 
 import AcyclicDigraph exposing (Node, Edge, Cycle, AcyclicDigraph)
 import ArcDiagram
-import ArcDiagram.Distance
+import ArcDiagram.Distance exposing (Distance)
 import Dict exposing (Dict)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Svg.Attributes
+import Svg exposing (Svg)
 import Set exposing (Set)
 
 
@@ -72,7 +74,6 @@ init dependencyGraph =
       , edgeFilter =
             { showIncluded = True
             , showConflicts = False
-            , showDuplicates = False
             }
       }
     , Cmd.none
@@ -143,16 +144,15 @@ updateEdgeFilter nodeResolution edgeFilter =
 -- VIEW
 
 
-defaultLayout : ArcDiagram.Layout
-defaultLayout =
-    ArcDiagram.defaultLayout
-
-
 layout : ArcDiagram.Layout
 layout =
-    { defaultLayout
-        | labelWidth = 400
-    }
+    let
+        defaultLayout =
+            ArcDiagram.defaultLayout
+    in
+        { defaultLayout
+            | labelWidth = 400
+        }
 
 
 view : Model -> Html Msg
@@ -189,12 +189,6 @@ view model =
 drawGraph : Model -> Html Node
 drawGraph model =
     let
-        toLabel : Node -> String
-        toLabel node =
-            Dict.get node model.graphLookup.artifactDict
-                |> Maybe.map (\artifact -> (artifact.artifactId ++ ":" ++ artifact.version))
-                |> Maybe.withDefault "not found"
-
         edgeFilter : Edge -> Dependency -> Bool
         edgeFilter key dependency =
             [ Just "INCLUDED"
@@ -216,23 +210,121 @@ drawGraph model =
                 |> Dict.keys
                 |> Set.fromList
 
-        graphView =
-            case AcyclicDigraph.fromEdges edges of
-                Err cycles ->
-                    viewCycles toLabel cycles
-
-                Ok graph ->
-                    let
-                        paint =
-                            model.selectedNode
-                                |> Maybe.map
-                                    (ArcDiagram.Distance.basicPaint toLabel graph)
-                                |> Maybe.withDefault
-                                    (ArcDiagram.basicPaint toLabel)
-                    in
-                        ArcDiagram.view layout paint graph
+        toLabel : Node -> String
+        toLabel node =
+            Dict.get node model.graphLookup.artifactDict
+                |> Maybe.map (\artifact -> (artifact.artifactId ++ ":" ++ artifact.version))
+                |> Maybe.withDefault "not found"
     in
-        graphView
+        case AcyclicDigraph.fromEdges edges of
+            Err cycles ->
+                viewCycles toLabel cycles
+
+            Ok graph ->
+                ArcDiagram.view
+                    layout
+                    (paint model graph toLabel)
+                    graph
+
+
+paint : Model -> AcyclicDigraph -> (Node -> String) -> ArcDiagram.Paint
+paint model graph toLabel =
+    case model.selectedNode of
+        Nothing ->
+            colors model.graphLookup toLabel
+
+        Just node ->
+            (ArcDiagram.Distance.paint
+                { viewLabel =
+                    \node distance ->
+                        viewLabel (toLabel node)
+                , colorNode = \node distance -> "#737373"
+                , colorEdge = \edge distance -> edgeColor model.graphLookup (Just distance) edge
+                }
+                graph
+                node
+            )
+
+
+edgeColor : GraphLookup -> Maybe Distance -> Edge -> String
+edgeColor graphLookup maybeDistance edge =
+    case Dict.get edge graphLookup.dependencyDict of
+        Just dependency ->
+            case maybeDistance of
+                Nothing ->
+                    case dependency.resolution of
+                        "INCLUDED" ->
+                            "#010202"
+
+                        "OMITTED_FOR_DUPLICATE" ->
+                            "#185AA9"
+
+                        "OMITTED_FOR_CONFLICT" ->
+                            "#EE2E2F"
+
+                        _ ->
+                            "blue"
+
+                Just aDistance ->
+                    case aDistance of
+                        Nothing ->
+                            case dependency.resolution of
+                                "INCLUDED" ->
+                                    "#CCCCCC"
+
+                                "OMITTED_FOR_DUPLICATE" ->
+                                    "#B8D2EC"
+
+                                "OMITTED_FOR_CONFLICT" ->
+                                    "#F2AFAD"
+
+                                _ ->
+                                    "blue"
+
+                        Just distance ->
+                            if distance >= 0 then
+                                case dependency.resolution of
+                                    "INCLUDED" ->
+                                        "#010202"
+
+                                    "OMITTED_FOR_DUPLICATE" ->
+                                        "#185AA9"
+
+                                    "OMITTED_FOR_CONFLICT" ->
+                                        "#EE2E2F"
+
+                                    _ ->
+                                        "blue"
+                            else
+                                Debug.crash "nope"
+
+        Nothing ->
+            Debug.crash "Could not find dependency in graphLookup.dependencyDict"
+
+
+colors : GraphLookup -> (Node -> String) -> ArcDiagram.Paint
+colors graphLookup toLabel =
+    let
+        basicPaint =
+            ArcDiagram.basicPaint toLabel
+    in
+        { basicPaint
+            | colorEdge = edgeColor graphLookup Nothing
+            , colorNode = \node -> "#737373"
+            , viewLabel = \node -> viewLabel (toLabel node)
+        }
+
+
+viewLabel : String -> Svg msg
+viewLabel string =
+    Svg.text_
+        [ Svg.Attributes.x "4px"
+        , Svg.Attributes.fontFamily "monospace"
+        , Svg.Attributes.fontSize "12px"
+        , Svg.Attributes.dominantBaseline "middle"
+        ]
+        [ Svg.text string
+        ]
 
 
 viewCycles : (Node -> String) -> List Cycle -> Html a
