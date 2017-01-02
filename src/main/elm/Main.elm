@@ -3,6 +3,7 @@ module Main exposing (..)
 import AcyclicDigraph exposing (Node, Edge, Cycle, AcyclicDigraph)
 import ArcDiagram
 import ArcDiagram.Distance exposing (Distance)
+import DistancePaint
 import Dict exposing (Dict)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -67,12 +68,17 @@ type alias Model =
     }
 
 
+type alias Color =
+    String
+
+
 init : DependencyGraph -> ( Model, Cmd Msg )
 init dependencyGraph =
     ( { graphLookup = toGraphLookup dependencyGraph
       , selectedNode = Nothing
       , edgeFilter =
             { showIncluded = True
+            , showDuplicates = False
             , showConflicts = False
             }
       }
@@ -221,14 +227,91 @@ drawGraph model =
                 viewCycles toLabel cycles
 
             Ok graph ->
-                ArcDiagram.view
-                    layout
-                    (paint model graph toLabel)
-                    graph
+                let
+                    paint =
+                        model.selectedNode
+                            |> Maybe.map
+                                (DistancePaint.basicPaint toLabel graph)
+                            |> Maybe.withDefault
+                                (paintNothingSelected model toLabel)
+                in
+                    ArcDiagram.view
+                        layout
+                        paint
+                        graph
 
 
-paint : Model -> AcyclicDigraph -> (Node -> String) -> ArcDiagram.Paint
-paint model graph toLabel =
+paintNothingSelected : Model -> (Node -> String) -> ArcDiagram.Paint
+paintNothingSelected model toLabel =
+    { viewLabel = toLabel >> viewLabel
+    , colorNode = always nodeColorDark
+    , colorEdge = edgeColor model.graphLookup.dependencyDict
+    }
+
+
+nodeColorDark : Color
+nodeColorDark =
+    "rgb(1, 2, 2)"
+
+
+edgeColor : Dict Edge Dependency -> Edge -> String
+edgeColor dependencyDict edge =
+    case Dict.get edge dependencyDict of
+        Nothing ->
+            colorError
+
+        Just dependency ->
+            case dependency.resolution of
+                "INCLUDED" ->
+                    edgeColorIncludedDark
+
+                "OMITTED_FOR_DUPLICATE" ->
+                    edgeColorDuplicateDark
+
+                "OMITTED_FOR_CONFLICT" ->
+                    edgeColorConflictDark
+
+                _ ->
+                    colorError
+
+
+colorError : Color
+colorError =
+    "red"
+
+
+edgeColorConflictDark : Color
+edgeColorConflictDark =
+    "rgba(238, 46, 47, 0.4)"
+
+
+edgeColorIncludedDark : Color
+edgeColorIncludedDark =
+    "rgba(1, 2, 2, 0.4)"
+
+
+edgeColorDuplicateDark : Color
+edgeColorDuplicateDark =
+    "rgba(24, 90, 169, 0.4)"
+
+
+colorIncludedDark : Color
+colorIncludedDark =
+    "rgb(1, 2, 2)"
+
+
+colorIncludedMiddle : Color
+colorIncludedMiddle =
+    "#737373"
+
+
+colorIncludedLight : Color
+colorIncludedLight =
+    "#CCCCCC"
+
+
+myPaint : Model -> AcyclicDigraph -> (Node -> String) -> ArcDiagram.Paint
+myPaint model graph toLabel =
     case model.selectedNode of
         Nothing ->
             colors model.graphLookup toLabel
@@ -239,15 +322,15 @@ paint model graph toLabel =
                     \node distance ->
                         viewLabel (toLabel node)
                 , colorNode = \node distance -> "#737373"
-                , colorEdge = \edge distance -> edgeColor model.graphLookup (Just distance) edge
+                , colorEdge = \edge distance -> computeEdgeColor model.graphLookup (Just distance) edge
                 }
                 graph
                 node
             )
 
 
-edgeColor : GraphLookup -> Maybe Distance -> Edge -> String
-edgeColor graphLookup maybeDistance edge =
+computeEdgeColor : GraphLookup -> Maybe Distance -> Edge -> String
+computeEdgeColor graphLookup maybeDistance edge =
     case Dict.get edge graphLookup.dependencyDict of
         Just dependency ->
             case maybeDistance of
@@ -309,7 +392,7 @@ colors graphLookup toLabel =
             ArcDiagram.basicPaint toLabel
     in
         { basicPaint
-            | colorEdge = edgeColor graphLookup Nothing
+            | colorEdge = computeEdgeColor graphLookup Nothing
             , colorNode = \node -> "#737373"
             , viewLabel = \node -> viewLabel (toLabel node)
         }
