@@ -8,8 +8,6 @@ import Dict exposing (Dict)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Svg.Attributes
-import Svg exposing (Svg)
 import Set exposing (Set)
 
 
@@ -107,7 +105,8 @@ toGraphLookup dependencyGraph =
 
 
 type NodeResolution
-    = OmittedForConflict
+    = Included
+    | OmittedForConflict
     | OmittedForDuplicate
 
 
@@ -139,6 +138,9 @@ update msg model =
 updateEdgeFilter : NodeResolution -> EdgeFilter -> EdgeFilter
 updateEdgeFilter nodeResolution edgeFilter =
     case nodeResolution of
+        Included ->
+            { edgeFilter | showIncluded = not edgeFilter.showIncluded }
+
         OmittedForDuplicate ->
             { edgeFilter | showDuplicates = not edgeFilter.showDuplicates }
 
@@ -169,7 +171,16 @@ view model =
             [ header [] [ text "Filter" ]
             , fieldset []
                 [ div [ class "title" ] [ text "Resolution" ]
-                , label []
+                , label [ style [ ( "color", edgeColorConflict Dark ) ] ]
+                    [ input
+                        [ type_ "checkbox"
+                        , checked model.edgeFilter.showConflicts
+                        , onClick (ToggleResolution OmittedForConflict)
+                        ]
+                        []
+                    , text "Conflicts"
+                    ]
+                , label [ style [ ( "color", edgeColorDuplicate Dark ) ] ]
                     [ input
                         [ type_ "checkbox"
                         , checked model.edgeFilter.showDuplicates
@@ -178,14 +189,14 @@ view model =
                         []
                     , text "Duplicates"
                     ]
-                , label []
+                , label [ style [ ( "color", edgeColorIncluded Dark ) ] ]
                     [ input
                         [ type_ "checkbox"
-                        , checked model.edgeFilter.showConflicts
-                        , onClick (ToggleResolution OmittedForConflict)
+                        , checked model.edgeFilter.showIncluded
+                        , onClick (ToggleResolution Included)
                         ]
                         []
-                    , text "Conflicts"
+                    , text "Resolved"
                     ]
                 ]
             ]
@@ -197,7 +208,10 @@ drawGraph model =
     let
         edgeFilter : Edge -> Dependency -> Bool
         edgeFilter key dependency =
-            [ Just "INCLUDED"
+            [ if model.edgeFilter.showIncluded then
+                Just "INCLUDED"
+              else
+                Nothing
             , if model.edgeFilter.showConflicts then
                 Just "OMITTED_FOR_CONFLICT"
               else
@@ -243,15 +257,14 @@ drawGraph model =
 
 paintNothingSelected : Model -> (Node -> String) -> ArcDiagram.Paint
 paintNothingSelected model toLabel =
-    { viewLabel = toLabel >> viewLabel
-    , colorNode = always nodeColorDark
-    , colorEdge = edgeColor model.graphLookup.dependencyDict Middle
-    }
-
-
-nodeColorDark : Color
-nodeColorDark =
-    "rgb(1, 2, 2)"
+    let
+        p =
+            ArcDiagram.basicPaint toLabel
+    in
+        { p
+            | colorNode = always (edgeColorIncluded Dark)
+            , colorEdge = edgeColor model.graphLookup.dependencyDict Middle
+        }
 
 
 edgeColorFromDistance : Dict Edge Dependency -> Edge -> Distance -> String
@@ -333,121 +346,6 @@ edgeColorDuplicate intesity =
 
         Light ->
             "rgba(24, 90, 169, 0.2)"
-
-
-colorIncludedDark : Color
-colorIncludedDark =
-    "rgb(1, 2, 2)"
-
-
-colorIncludedMiddle : Color
-colorIncludedMiddle =
-    "#737373"
-
-
-colorIncludedLight : Color
-colorIncludedLight =
-    "#CCCCCC"
-
-
-myPaint : Model -> AcyclicDigraph -> (Node -> String) -> ArcDiagram.Paint
-myPaint model graph toLabel =
-    case model.selectedNode of
-        Nothing ->
-            colors model.graphLookup toLabel
-
-        Just node ->
-            (ArcDiagram.Distance.paint
-                { viewLabel =
-                    \node distance ->
-                        viewLabel (toLabel node)
-                , colorNode = \node distance -> "#737373"
-                , colorEdge = \edge distance -> computeEdgeColor model.graphLookup (Just distance) edge
-                }
-                graph
-                node
-            )
-
-
-computeEdgeColor : GraphLookup -> Maybe Distance -> Edge -> String
-computeEdgeColor graphLookup maybeDistance edge =
-    case Dict.get edge graphLookup.dependencyDict of
-        Just dependency ->
-            case maybeDistance of
-                Nothing ->
-                    case dependency.resolution of
-                        "INCLUDED" ->
-                            "#010202"
-
-                        "OMITTED_FOR_DUPLICATE" ->
-                            "#185AA9"
-
-                        "OMITTED_FOR_CONFLICT" ->
-                            "#EE2E2F"
-
-                        _ ->
-                            "blue"
-
-                Just aDistance ->
-                    case aDistance of
-                        Nothing ->
-                            case dependency.resolution of
-                                "INCLUDED" ->
-                                    "#CCCCCC"
-
-                                "OMITTED_FOR_DUPLICATE" ->
-                                    "#B8D2EC"
-
-                                "OMITTED_FOR_CONFLICT" ->
-                                    "#F2AFAD"
-
-                                _ ->
-                                    "blue"
-
-                        Just distance ->
-                            if distance >= 0 then
-                                case dependency.resolution of
-                                    "INCLUDED" ->
-                                        "#010202"
-
-                                    "OMITTED_FOR_DUPLICATE" ->
-                                        "#185AA9"
-
-                                    "OMITTED_FOR_CONFLICT" ->
-                                        "#EE2E2F"
-
-                                    _ ->
-                                        "blue"
-                            else
-                                Debug.crash "nope"
-
-        Nothing ->
-            Debug.crash "Could not find dependency in graphLookup.dependencyDict"
-
-
-colors : GraphLookup -> (Node -> String) -> ArcDiagram.Paint
-colors graphLookup toLabel =
-    let
-        basicPaint =
-            ArcDiagram.basicPaint toLabel
-    in
-        { basicPaint
-            | colorEdge = computeEdgeColor graphLookup Nothing
-            , colorNode = \node -> "#737373"
-            , viewLabel = \node -> viewLabel (toLabel node)
-        }
-
-
-viewLabel : String -> Svg msg
-viewLabel string =
-    Svg.text_
-        [ Svg.Attributes.x "4px"
-        , Svg.Attributes.fontFamily "monospace"
-        , Svg.Attributes.fontSize "12px"
-        , Svg.Attributes.dominantBaseline "middle"
-        ]
-        [ Svg.text string
-        ]
 
 
 viewCycles : (Node -> String) -> List Cycle -> Html a
