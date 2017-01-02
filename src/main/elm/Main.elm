@@ -270,8 +270,11 @@ paintNothingSelected model toLabel =
 edgeColorFromDistance : Dict Edge Dependency -> Edge -> Distance -> String
 edgeColorFromDistance dependencyDict edge distance =
     case distance of
-        Just _ ->
-            edgeColor dependencyDict Dark edge
+        Just d ->
+            if d == 0 then
+                edgeColor dependencyDict Dark edge
+            else
+                edgeColor dependencyDict Middle edge
 
         Nothing ->
             edgeColor dependencyDict Light edge
@@ -319,7 +322,7 @@ edgeColorConflict intesity =
             "rgba(238, 46, 47, 0.4)"
 
         Light ->
-            "rgba(238, 46, 47, 0.2)"
+            "rgba(238, 46, 47, 0.1)"
 
 
 edgeColorIncluded : ColorIntensity -> Color
@@ -332,7 +335,7 @@ edgeColorIncluded intesity =
             "rgba(1, 2, 2, 0.4)"
 
         Light ->
-            "rgba(1, 2, 2, 0.2)"
+            "rgba(1, 2, 2, 0.1)"
 
 
 edgeColorDuplicate : ColorIntensity -> Color
@@ -345,7 +348,7 @@ edgeColorDuplicate intesity =
             "rgba(24, 90, 169, 0.4)"
 
         Light ->
-            "rgba(24, 90, 169, 0.2)"
+            "rgba(24, 90, 169, 0.1)"
 
 
 viewCycles : (Node -> String) -> List Cycle -> Html a
