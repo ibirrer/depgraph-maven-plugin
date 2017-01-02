@@ -52,18 +52,38 @@ type alias GraphLookup =
     }
 
 
-type alias EdgeFilter =
+type alias ResolutionFilter =
     { showIncluded : Bool
     , showConflicts : Bool
     , showDuplicates : Bool
     }
 
 
+type alias ScopeFilter =
+    { showCompile : Bool
+    , showProvided : Bool
+    , showRuntime : Bool
+    , showTest : Bool
+    , showSystem : Bool
+    , showImport : Bool
+    }
+
+
 type alias Model =
     { graphLookup : GraphLookup
     , selectedNode : Maybe Node
-    , edgeFilter : EdgeFilter
+    , resolutionFilter : ResolutionFilter
+    , scopeFilter : ScopeFilter
     }
+
+
+type Scope
+    = Compile
+    | Provided
+    | Runtime
+    | Test
+    | System
+    | Import
 
 
 type alias Color =
@@ -74,10 +94,18 @@ init : DependencyGraph -> ( Model, Cmd Msg )
 init dependencyGraph =
     ( { graphLookup = toGraphLookup dependencyGraph
       , selectedNode = Nothing
-      , edgeFilter =
+      , resolutionFilter =
             { showIncluded = True
             , showDuplicates = False
             , showConflicts = False
+            }
+      , scopeFilter =
+            { showCompile = True
+            , showProvided = True
+            , showRuntime = True
+            , showTest = True
+            , showSystem = True
+            , showImport = True
             }
       }
     , Cmd.none
@@ -113,6 +141,7 @@ type NodeResolution
 type Msg
     = ToggleResolution NodeResolution
     | SelectGraphNode Node
+    | ToggleScope Scope
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -128,15 +157,23 @@ update msg model =
 
         ToggleResolution nodeResolution ->
             ( { model
-                | edgeFilter =
-                    updateEdgeFilter nodeResolution model.edgeFilter
+                | resolutionFilter =
+                    updateResolutionFilter nodeResolution model.resolutionFilter
+              }
+            , Cmd.none
+            )
+
+        ToggleScope scope ->
+            ( { model
+                | scopeFilter =
+                    updateScopeFilter scope model.scopeFilter
               }
             , Cmd.none
             )
 
 
-updateEdgeFilter : NodeResolution -> EdgeFilter -> EdgeFilter
-updateEdgeFilter nodeResolution edgeFilter =
+updateResolutionFilter : NodeResolution -> ResolutionFilter -> ResolutionFilter
+updateResolutionFilter nodeResolution edgeFilter =
     case nodeResolution of
         Included ->
             { edgeFilter | showIncluded = not edgeFilter.showIncluded }
@@ -146,6 +183,28 @@ updateEdgeFilter nodeResolution edgeFilter =
 
         OmittedForConflict ->
             { edgeFilter | showConflicts = not edgeFilter.showConflicts }
+
+
+updateScopeFilter : Scope -> ScopeFilter -> ScopeFilter
+updateScopeFilter scope scopeFilter =
+    case scope of
+        Compile ->
+            { scopeFilter | showCompile = not scopeFilter.showCompile }
+
+        Provided ->
+            { scopeFilter | showProvided = not scopeFilter.showProvided }
+
+        Runtime ->
+            { scopeFilter | showRuntime = not scopeFilter.showRuntime }
+
+        Test ->
+            { scopeFilter | showTest = not scopeFilter.showTest }
+
+        System ->
+            { scopeFilter | showSystem = not scopeFilter.showSystem }
+
+        Import ->
+            { scopeFilter | showImport = not scopeFilter.showImport }
 
 
 
@@ -174,7 +233,7 @@ view model =
                 , label [ style [ ( "color", edgeColorConflict Dark ) ] ]
                     [ input
                         [ type_ "checkbox"
-                        , checked model.edgeFilter.showConflicts
+                        , checked model.resolutionFilter.showConflicts
                         , onClick (ToggleResolution OmittedForConflict)
                         ]
                         []
@@ -183,7 +242,7 @@ view model =
                 , label [ style [ ( "color", edgeColorDuplicate Dark ) ] ]
                     [ input
                         [ type_ "checkbox"
-                        , checked model.edgeFilter.showDuplicates
+                        , checked model.resolutionFilter.showDuplicates
                         , onClick (ToggleResolution OmittedForDuplicate)
                         ]
                         []
@@ -192,43 +251,107 @@ view model =
                 , label [ style [ ( "color", edgeColorIncluded Dark ) ] ]
                     [ input
                         [ type_ "checkbox"
-                        , checked model.edgeFilter.showIncluded
+                        , checked model.resolutionFilter.showIncluded
                         , onClick (ToggleResolution Included)
                         ]
                         []
                     , text "Resolved"
                     ]
                 ]
+            , fieldset []
+                [ div [ class "title" ] [ text "Scopes" ]
+                , scopeCheckbox model.scopeFilter.showCompile Compile "Compile"
+                , scopeCheckbox model.scopeFilter.showProvided Provided "Provided"
+                , scopeCheckbox model.scopeFilter.showRuntime Runtime "Runtime"
+                , scopeCheckbox model.scopeFilter.showTest Test "Test"
+                , scopeCheckbox model.scopeFilter.showSystem System "System"
+                , scopeCheckbox model.scopeFilter.showImport Import "Import"
+                ]
             ]
         ]
+
+
+scopeCheckbox : Bool -> Scope -> String -> Html Msg
+scopeCheckbox isChecked scope labelText =
+    label []
+        [ input
+            [ type_ "checkbox"
+            , checked isChecked
+            , onClick (ToggleScope scope)
+            ]
+            []
+        , text labelText
+        ]
+
+
+filterEdges : Model -> Set Edge
+filterEdges model =
+    let
+        resolutionFilter : Edge -> Dependency -> Bool
+        resolutionFilter edge dependency =
+            [ toMaybe model.resolutionFilter.showIncluded "INCLUDED"
+            , toMaybe model.resolutionFilter.showConflicts "OMITTED_FOR_CONFLICT"
+            , toMaybe model.resolutionFilter.showDuplicates "OMITTED_FOR_DUPLICATE"
+            ]
+                |> List.filterMap identity
+                |> List.member dependency.resolution
+
+        scopeFilter : Edge -> Dependency -> Bool
+        scopeFilter edge dependency =
+            [ toMaybe model.scopeFilter.showCompile "compile"
+            , toMaybe model.scopeFilter.showProvided "provided"
+            , toMaybe model.scopeFilter.showRuntime "runtime"
+            , toMaybe model.scopeFilter.showTest "test"
+            , toMaybe model.scopeFilter.showSystem "system"
+            , toMaybe model.scopeFilter.showImport "import"
+            ]
+                |> List.filterMap identity
+                |> containsAny dependency.scopes
+
+        filteredNodes =
+            model.graphLookup.artifactDict
+                |> Dict.filter (\id artifact -> String.contains "spring" artifact.artifactId)
+                |> Dict.keys
+
+        artifactFilter : Edge -> Dependency -> Bool
+        artifactFilter edge dependeny =
+            List.member (Tuple.first edge) filteredNodes
+                && List.member (Tuple.second edge) filteredNodes
+    in
+        model.graphLookup.dependencyDict
+            |> Dict.filter resolutionFilter
+            |> Dict.filter scopeFilter
+            |> Dict.filter artifactFilter
+            |> Dict.keys
+            |> Set.fromList
+
+
+containsAny : List a -> List a -> Bool
+containsAny items list =
+    case items of
+        x :: xs ->
+            if List.member x list then
+                True
+            else
+                containsAny xs list
+
+        [] ->
+            False
+
+
+toMaybe : Bool -> String -> Maybe String
+toMaybe isOn name =
+    if isOn then
+        Just name
+    else
+        Nothing
 
 
 drawGraph : Model -> Html Node
 drawGraph model =
     let
-        edgeFilter : Edge -> Dependency -> Bool
-        edgeFilter key dependency =
-            [ if model.edgeFilter.showIncluded then
-                Just "INCLUDED"
-              else
-                Nothing
-            , if model.edgeFilter.showConflicts then
-                Just "OMITTED_FOR_CONFLICT"
-              else
-                Nothing
-            , if model.edgeFilter.showDuplicates then
-                Just "OMITTED_FOR_DUPLICATE"
-              else
-                Nothing
-            ]
-                |> List.filterMap identity
-                |> List.member dependency.resolution
-
         edges =
-            model.graphLookup.dependencyDict
-                |> Dict.filter edgeFilter
-                |> Dict.keys
-                |> Set.fromList
+            filterEdges model
 
         toLabel : Node -> String
         toLabel node =
