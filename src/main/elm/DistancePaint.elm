@@ -16,11 +16,12 @@ defaultDistancePaint =
     }
 
 
-basicPaint : (Node -> String) -> AcyclicDigraph -> Node -> Paint
-basicPaint toLabel =
+basicPaint : (Node -> String) -> (Edge -> Distance -> String) -> AcyclicDigraph -> Node -> Paint
+basicPaint toLabel colorEdge =
     paint
         { defaultDistancePaint
             | viewLabel = \n d -> viewLabelDimmed (isNothing d) (toLabel n)
+            , colorEdge = colorEdge
         }
 
 
@@ -71,9 +72,9 @@ colorFromDistance distance =
                 let
                     colorFromAlpha =
                         if d > 0 then
-                            blueFromAlpha
+                            purpleFromAlpha
                         else
-                            redFromAlpha
+                            greenFromAlpha
                 in
                     colorFromAlpha <| 1 - ((min 3 (toFloat (abs d)) - 1) * 0.3)
 
@@ -81,14 +82,14 @@ colorFromDistance distance =
             "rgba(0, 0, 0, 0.2)"
 
 
-blueFromAlpha : Float -> String
-blueFromAlpha =
-    rgba 35 135 206
+purpleFromAlpha : Float -> String
+purpleFromAlpha =
+    rgba 180 56 148
 
 
-redFromAlpha : Float -> String
-redFromAlpha =
-    rgba 224 69 39
+greenFromAlpha : Float -> String
+greenFromAlpha =
+    rgba 0 140 72
 
 
 rgba : Int -> Int -> Int -> Float -> String

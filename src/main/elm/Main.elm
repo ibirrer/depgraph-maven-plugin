@@ -231,7 +231,7 @@ drawGraph model =
                     paint =
                         model.selectedNode
                             |> Maybe.map
-                                (DistancePaint.basicPaint toLabel graph)
+                                (DistancePaint.basicPaint toLabel (edgeColorFromDistance model.graphLookup.dependencyDict) graph)
                             |> Maybe.withDefault
                                 (paintNothingSelected model toLabel)
                 in
@@ -245,7 +245,7 @@ paintNothingSelected : Model -> (Node -> String) -> ArcDiagram.Paint
 paintNothingSelected model toLabel =
     { viewLabel = toLabel >> viewLabel
     , colorNode = always nodeColorDark
-    , colorEdge = edgeColor model.graphLookup.dependencyDict
+    , colorEdge = edgeColor model.graphLookup.dependencyDict Middle
     }
 
 
@@ -254,8 +254,18 @@ nodeColorDark =
     "rgb(1, 2, 2)"
 
 
-edgeColor : Dict Edge Dependency -> Edge -> String
-edgeColor dependencyDict edge =
+edgeColorFromDistance : Dict Edge Dependency -> Edge -> Distance -> String
+edgeColorFromDistance dependencyDict edge distance =
+    case distance of
+        Just _ ->
+            edgeColor dependencyDict Dark edge
+
+        Nothing ->
+            edgeColor dependencyDict Light edge
+
+
+edgeColor : Dict Edge Dependency -> ColorIntensity -> Edge -> String
+edgeColor dependencyDict colorIntensity edge =
     case Dict.get edge dependencyDict of
         Nothing ->
             colorError
@@ -263,13 +273,13 @@ edgeColor dependencyDict edge =
         Just dependency ->
             case dependency.resolution of
                 "INCLUDED" ->
-                    edgeColorIncludedDark
+                    edgeColorIncluded colorIntensity
 
                 "OMITTED_FOR_DUPLICATE" ->
-                    edgeColorDuplicateDark
+                    edgeColorDuplicate colorIntensity
 
                 "OMITTED_FOR_CONFLICT" ->
-                    edgeColorConflictDark
+                    edgeColorConflict colorIntensity
 
                 _ ->
                     colorError
@@ -280,19 +290,49 @@ colorError =
     "red"
 
 
-edgeColorConflictDark : Color
-edgeColorConflictDark =
-    "rgba(238, 46, 47, 0.4)"
+type ColorIntensity
+    = Dark
+    | Middle
+    | Light
 
 
-edgeColorIncludedDark : Color
-edgeColorIncludedDark =
-    "rgba(1, 2, 2, 0.4)"
+edgeColorConflict : ColorIntensity -> Color
+edgeColorConflict intesity =
+    case intesity of
+        Dark ->
+            "rgba(238, 46, 47, 0.8)"
+
+        Middle ->
+            "rgba(238, 46, 47, 0.4)"
+
+        Light ->
+            "rgba(238, 46, 47, 0.2)"
 
 
-edgeColorDuplicateDark : Color
-edgeColorDuplicateDark =
-    "rgba(24, 90, 169, 0.4)"
+edgeColorIncluded : ColorIntensity -> Color
+edgeColorIncluded intesity =
+    case intesity of
+        Dark ->
+            "rgba(1, 2, 2, 0.8)"
+
+        Middle ->
+            "rgba(1, 2, 2, 0.4)"
+
+        Light ->
+            "rgba(1, 2, 2, 0.2)"
+
+
+edgeColorDuplicate : ColorIntensity -> Color
+edgeColorDuplicate intesity =
+    case intesity of
+        Dark ->
+            "rgba(24, 90, 169, 0.8)"
+
+        Middle ->
+            "rgba(24, 90, 169, 0.4)"
+
+        Light ->
+            "rgba(24, 90, 169, 0.2)"
 
 
 colorIncludedDark : Color
