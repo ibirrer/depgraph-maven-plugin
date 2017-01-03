@@ -29,8 +29,8 @@ viewLabelDimmed : Bool -> String -> Svg a
 viewLabelDimmed isDimmed string =
     Svg.text_
         [ Svg.Attributes.x "4px"
-        , Svg.Attributes.fontFamily "Helvetica, Arial"
-        , Svg.Attributes.fontSize "12px"
+        , Svg.Attributes.fontFamily "'Source Sans Pro', 'Trebuchet MS', 'Lucida Grande', 'Bitstream Vera Sans', 'Helvetica Neue', sans-serif"
+        , Svg.Attributes.fontSize "14px"
         , Svg.Attributes.dominantBaseline "middle"
         , Svg.Attributes.fill (labelColor isDimmed)
         ]

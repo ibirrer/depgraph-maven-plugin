@@ -74,6 +74,8 @@ type alias Model =
     , selectedNode : Maybe Node
     , resolutionFilter : ResolutionFilter
     , scopeFilter : ScopeFilter
+    , includeFilter : String
+    , excludeFilter : String
     }
 
 
@@ -107,6 +109,8 @@ init dependencyGraph =
             , showSystem = True
             , showImport = True
             }
+      , includeFilter = ""
+      , excludeFilter = ""
       }
     , Cmd.none
     )
@@ -142,6 +146,8 @@ type Msg
     = ToggleResolution NodeResolution
     | SelectGraphNode Node
     | ToggleScope Scope
+    | SetIncludeFilter String
+    | SetExcludeFilter String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -167,6 +173,20 @@ update msg model =
             ( { model
                 | scopeFilter =
                     updateScopeFilter scope model.scopeFilter
+              }
+            , Cmd.none
+            )
+
+        SetIncludeFilter filter ->
+            ( { model
+                | includeFilter = filter
+              }
+            , Cmd.none
+            )
+
+        SetExcludeFilter filter ->
+            ( { model
+                | excludeFilter = filter
               }
             , Cmd.none
             )
@@ -222,52 +242,87 @@ layout =
         }
 
 
-view : Model -> Html Msg
-view model =
-    div [ id "main" ]
-        [ div [ id "graph" ] [ drawGraph model |> Html.map (\node -> SelectGraphNode node) ]
-        , div [ id "filters" ]
-            [ header [] [ text "Filter" ]
-            , fieldset []
-                [ div [ class "title" ] [ text "Resolution" ]
-                , label [ style [ ( "color", edgeColorConflict Dark ) ] ]
-                    [ input
-                        [ type_ "checkbox"
-                        , checked model.resolutionFilter.showConflicts
-                        , onClick (ToggleResolution OmittedForConflict)
-                        ]
-                        []
-                    , text "Conflicts"
+filterBar : Model -> Html Msg
+filterBar model =
+    div [ class "filter-bar" ]
+        [ div [ class "filter-bar__column filter-bar__column--stretch" ]
+            [ div [ class "text-filter" ]
+                [ div [ class "text-filter__item" ]
+                    [ label [] [ text "Includes: " ]
+                    , input [ spellcheck False, onInput SetIncludeFilter ] []
                     ]
-                , label [ style [ ( "color", edgeColorDuplicate Dark ) ] ]
-                    [ input
-                        [ type_ "checkbox"
-                        , checked model.resolutionFilter.showDuplicates
-                        , onClick (ToggleResolution OmittedForDuplicate)
-                        ]
-                        []
-                    , text "Duplicates"
+                , div [ class "text-filter__item" ]
+                    [ label [] [ text "Excludes: " ]
+                    , input [ spellcheck False, onInput SetExcludeFilter ] []
                     ]
-                , label [ style [ ( "color", edgeColorIncluded Dark ) ] ]
-                    [ input
-                        [ type_ "checkbox"
-                        , checked model.resolutionFilter.showIncluded
-                        , onClick (ToggleResolution Included)
-                        ]
-                        []
-                    , text "Resolved"
-                    ]
-                ]
-            , fieldset []
-                [ div [ class "title" ] [ text "Scopes" ]
-                , scopeCheckbox model.scopeFilter.showCompile Compile "Compile"
-                , scopeCheckbox model.scopeFilter.showProvided Provided "Provided"
-                , scopeCheckbox model.scopeFilter.showRuntime Runtime "Runtime"
-                , scopeCheckbox model.scopeFilter.showTest Test "Test"
-                , scopeCheckbox model.scopeFilter.showSystem System "System"
-                , scopeCheckbox model.scopeFilter.showImport Import "Import"
                 ]
             ]
+        , div [ class "filter-bar__column" ]
+            [ div [ class "checkbox-filter" ]
+                [ div [ class "checkbox-filter__title" ] [ text "Resolution: " ]
+                , div [ class "checkbox-filter__controls" ]
+                    [ div [ class "checkbox-group" ]
+                        [ div [ class "checkbox-group__sub" ]
+                            [ label []
+                                [ input
+                                    [ type_ "checkbox"
+                                    , checked model.resolutionFilter.showIncluded
+                                    , onClick (ToggleResolution Included)
+                                    ]
+                                    []
+                                , text "Include"
+                                ]
+                            , label [ style [ ( "color", edgeColorDuplicate Dark ) ] ]
+                                [ input
+                                    [ type_ "checkbox"
+                                    , checked model.resolutionFilter.showDuplicates
+                                    , onClick (ToggleResolution OmittedForDuplicate)
+                                    ]
+                                    []
+                                , text "Duplicate"
+                                ]
+                            , label [ style [ ( "color", edgeColorConflict Dark ) ] ]
+                                [ input
+                                    [ type_ "checkbox"
+                                    , checked model.resolutionFilter.showConflicts
+                                    , onClick (ToggleResolution OmittedForConflict)
+                                    ]
+                                    []
+                                , text "Conflict"
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        , div [ class "filter-bar__column" ]
+            [ div [ class "checkbox-filter" ]
+                [ div [ class "checkbox-filter__title" ] [ text "Scopes: " ]
+                , div [ class "checkbox-filter__controls" ]
+                    [ div [ class "checkbox-group" ]
+                        [ div [ class "checkbox-group__sub" ]
+                            [ scopeCheckbox model.scopeFilter.showCompile Compile "Compile"
+                            , scopeCheckbox model.scopeFilter.showProvided Provided "Provided"
+                            , scopeCheckbox model.scopeFilter.showRuntime Runtime "Runtime"
+                            ]
+                        , div [ class "checkbox-group__sub" ]
+                            [ scopeCheckbox model.scopeFilter.showTest Test "Test"
+                            , scopeCheckbox model.scopeFilter.showSystem System "System"
+                            , scopeCheckbox model.scopeFilter.showImport Import "Import"
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+
+
+view : Model -> Html Msg
+view model =
+    div []
+        [ filterBar model
+        , div [ class "graph" ]
+            [ drawGraph model |> Html.map (\node -> SelectGraphNode node) ]
         ]
 
 
@@ -308,22 +363,56 @@ filterEdges model =
                 |> List.filterMap identity
                 |> containsAny dependency.scopes
 
-        filteredNodes =
+        includedNodes : List Node
+        includedNodes =
             model.graphLookup.artifactDict
-                |> Dict.filter (\id artifact -> String.contains "spring" artifact.artifactId)
+                |> Dict.filter
+                    (\id artifact ->
+                        containsAnySubstring (String.split "," model.includeFilter) artifact.artifactId
+                    )
                 |> Dict.keys
 
-        artifactFilter : Edge -> Dependency -> Bool
-        artifactFilter edge dependeny =
-            List.member (Tuple.first edge) filteredNodes
-                && List.member (Tuple.second edge) filteredNodes
+        excludedNodes : List Node
+        excludedNodes =
+            model.graphLookup.artifactDict
+                |> Dict.filter
+                    (\id artifact ->
+                        model.excludeFilter
+                            /= ""
+                            && containsAnySubstring (String.split "," model.excludeFilter) artifact.artifactId
+                    )
+                |> Dict.keys
+
+        includedNodesFilter : Edge -> Dependency -> Bool
+        includedNodesFilter edge dependeny =
+            List.member (Tuple.first edge) includedNodes
+                && List.member (Tuple.second edge) includedNodes
+
+        excludedNodesFilter : Edge -> Dependency -> Bool
+        excludedNodesFilter edge dependeny =
+            (not (List.member (Tuple.first edge) excludedNodes))
+                && (not (List.member (Tuple.second edge) excludedNodes))
     in
         model.graphLookup.dependencyDict
             |> Dict.filter resolutionFilter
             |> Dict.filter scopeFilter
-            |> Dict.filter artifactFilter
+            |> Dict.filter includedNodesFilter
+            |> Dict.filter excludedNodesFilter
             |> Dict.keys
             |> Set.fromList
+
+
+containsAnySubstring : List String -> String -> Bool
+containsAnySubstring substrings string =
+    case substrings of
+        x :: xs ->
+            if String.contains x string then
+                True
+            else
+                containsAnySubstring xs string
+
+        [] ->
+            False
 
 
 containsAny : List a -> List a -> Bool
@@ -380,14 +469,10 @@ drawGraph model =
 
 paintNothingSelected : Model -> (Node -> String) -> ArcDiagram.Paint
 paintNothingSelected model toLabel =
-    let
-        p =
-            ArcDiagram.basicPaint toLabel
-    in
-        { p
-            | colorNode = always (edgeColorIncluded Dark)
-            , colorEdge = edgeColor model.graphLookup.dependencyDict Middle
-        }
+    { viewLabel = (\node -> DistancePaint.viewLabelDimmed False (toLabel node))
+    , colorNode = always (edgeColorIncluded Dark)
+    , colorEdge = edgeColor model.graphLookup.dependencyDict Middle
+    }
 
 
 edgeColorFromDistance : Dict Edge Dependency -> Edge -> Distance -> String
