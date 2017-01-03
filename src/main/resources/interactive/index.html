@@ -3,16 +3,110 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-
   <title>Dependency Graph</title>
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
+  <style>
+      html {
+          box-sizing: border-box;
+      }
+
+      *,
+      *:before,
+      *:after {
+          box-sizing: inherit;
+      }
+
+      body {
+          font-family: 'Source Sans Pro', 'Trebuchet MS', 'Lucida Grande', 'Bitstream Vera Sans', 'Helvetica Neue', sans-serif;
+          color: #293c4b;
+          margin: 0;
+          padding: 0;
+      }
+
+
+      .filter-bar {
+          display: flex;
+          align-items: stretch;
+          border-bottom: 1px solid rgb(150, 150, 150);
+          margin: 5px 0 5px 0;
+          padding-bottom: 5px;
+      }
+
+      .filter-bar__column {
+          flex: 0 1 auto;
+          border-right: 1px solid rgb(200, 200, 200);
+          padding : 0 5px 0 10px;
+      }
+
+      .filter-bar__column--last {
+          border-right: none;
+      }
+
+      .filter-bar__column--stretch {
+          flex: 1 1 auto;
+      }
+
+      .checkbox-filter {
+          display: flex;
+      }
+
+      .checkbox-filter__title {
+          flex: 0 1 auto;
+          font-weight: bold;
+          padding-right: 10px;
+      }
+
+      .checkbox-filter__controls {
+          flex: 0 1 auto;
+      }
+
+      .checkbox-group {
+          display: flex;
+      }
+
+      .checkbox-group__sub {
+          padding: 0 5px;
+      }
+
+
+      .checkbox-group label {
+          user-select: none;
+          display: block;
+      }
+
+
+      .text-filter__item {
+          padding-bottom: 5px;
+          display: flex;
+      }
+
+      .text-filter__item label {
+          flex: 0 1 auto;
+          font-weight: bold;
+          padding-right: 10px;
+      }
+
+      .text-filter__item input {
+       flex: 1 1 auto;
+       width: 100%;
+      }
+
+      .graph {
+          padding: 10px 20px;
+          overflow: auto;
+      }
+
+      input[type=checkbox] {
+          vertical-align: -2px;
+      }
+</style>
 </head>
 
-<body>
-  <div id="main"></div>
+<body id="app">
     <script src="graph.jsonp"></script>
     <script src="main.js"></script>
     <script>
-        var node = document.getElementById('main');
+        var node = document.getElementById('app');
         var app = Elm.Main.embed(node, graph);
     </script>
 </body>
