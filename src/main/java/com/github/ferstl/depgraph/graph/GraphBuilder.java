@@ -26,8 +26,7 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * A builder to create <a href="http://www.graphviz.org/doc/info/lang.html">DOT</a> strings by defining edges between
- * Nodes. The builder allows some customizations including custom {@link NodeRenderer}s and
- * {@link EdgeRenderer}s.
+ * Nodes. The builder allows some customizations including custom {@link NodeRenderer}s and {@link EdgeRenderer}s.
  *
  * @param <T> Type of the graph nodes.
  */
@@ -106,8 +105,8 @@ public final class GraphBuilder<T> {
   }
 
   /**
-   * Adds the two given nodes to the graph and creates an edge between them <strong>if they are not {@code null}</strong>.
-   * Nothing will be added to the graph if one or both nodes are {@code null}.
+   * Adds the two given nodes to the graph and creates an edge between them <strong>if they are not
+   * {@code null}</strong>. Nothing will be added to the graph if one or both nodes are {@code null}.
    *
    * @param from From node.
    * @param to To node.

@@ -34,7 +34,6 @@ import io.takari.maven.testing.executor.MavenExecutionResult;
 import io.takari.maven.testing.executor.MavenRuntime;
 import io.takari.maven.testing.executor.MavenVersions;
 import io.takari.maven.testing.executor.junit.MavenJUnitTestRunner;
-
 import static io.takari.maven.testing.TestResources.assertFilesPresent;
 import static java.nio.file.Files.copy;
 import static java.nio.file.Files.createDirectories;
@@ -139,6 +138,17 @@ public class DocumentationIntegrationTest {
     assertFilesPresent(this.basedir, "target/dependency-graph.png");
 
     collectFile("target/dependency-graph.png", "aggregated.png");
+  }
+
+  @Test
+  public void aggregatedJson() throws Exception {
+    runTest("aggregate",
+        "-DgraphFormat=json",
+        "-DincludeParentProjects=true");
+
+    assertFilesPresent(this.basedir, "target/dependency-graph.json");
+
+    collectFile("target/dependency-graph.json", "aggregated.json");
   }
 
   @Test

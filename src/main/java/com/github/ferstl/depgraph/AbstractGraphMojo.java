@@ -42,6 +42,7 @@ import org.apache.maven.shared.artifact.filter.StrictPatternExcludesArtifactFilt
 import org.apache.maven.shared.artifact.filter.StrictPatternIncludesArtifactFilter;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
 import org.apache.maven.shared.dependency.tree.DependencyTreeBuilder;
+import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.CommandLineUtils.StringStreamConsumer;
@@ -51,6 +52,7 @@ import com.github.ferstl.depgraph.dependency.DotGraphStyleConfigurer;
 import com.github.ferstl.depgraph.dependency.GmlGraphStyleConfigurer;
 import com.github.ferstl.depgraph.dependency.GraphFactory;
 import com.github.ferstl.depgraph.dependency.GraphStyleConfigurer;
+import com.github.ferstl.depgraph.dependency.JsonGraphStyleConfigurer;
 import com.github.ferstl.depgraph.dependency.PumlGraphStyleConfigurer;
 import com.github.ferstl.depgraph.dependency.style.StyleConfiguration;
 import com.github.ferstl.depgraph.dependency.style.resource.BuiltInStyleResource;
@@ -74,8 +76,8 @@ abstract class AbstractGraphMojo extends AbstractMojo {
   private static final String OUTPUT_FILE_NAME = "dependency-graph";
 
   /**
-   * The scope of the artifacts that should be included in the graph. An empty string indicates all scopes (default).
-   * The scopes being interpreted are the scopes as Maven sees them, not as specified in the pom. In summary:
+   * The scope of the artifacts that should be included in the graph. An empty string indicates all scopes (default). The
+   * scopes being interpreted are the scopes as Maven sees them, not as specified in the pom. In summary:
    * <ul>
    * <li>{@code compile}: Shows compile, provided and system dependencies</li>
    * <li>{@code provided}: Shows provided dependencies</li>
@@ -106,8 +108,8 @@ abstract class AbstractGraphMojo extends AbstractMojo {
   private List<String> excludes;
 
   /**
-   * List of artifacts, in the form of {@code groupId:artifactId:type:classifier}, to restrict the dependency graph
-   * only to artifacts that depend on them.
+   * List of artifacts, in the form of {@code groupId:artifactId:type:classifier}, to restrict the dependency graph only
+   * to artifacts that depend on them.
    *
    * @since 1.0.4
    */
@@ -123,8 +125,8 @@ abstract class AbstractGraphMojo extends AbstractMojo {
   private String graphFormat;
 
   /**
-   * The path to the generated output file. A file extension matching the configured {@code graphFormat} will be
-   * added if not specified.
+   * The path to the generated output file. A file extension matching the configured {@code graphFormat} will be added if
+   * not specified.
    *
    * @since 1.0.0
    * @deprecated Deprecated since 2.2.0. Use {@code outputDirectory} and {@code outputFileName} instead.
@@ -142,8 +144,8 @@ abstract class AbstractGraphMojo extends AbstractMojo {
   private File outputDirectory;
 
   /**
-   * The name of the dependency graph file. A file extension matching the configured {@code graphFormat} will be
-   * added if not specified.
+   * The name of the dependency graph file. A file extension matching the configured {@code graphFormat} will be added if
+   * not specified.
    *
    * @since 2.2.0
    */
@@ -183,8 +185,8 @@ abstract class AbstractGraphMojo extends AbstractMojo {
   private String imageFormat;
 
   /**
-   * Only relevant when {@code graphFormat=dot}: Path to the dot executable. Use this option in case
-   * {@link #createImage} is set to {@code true} and the dot executable is not on the system {@code PATH}.
+   * Only relevant when {@code graphFormat=dot}: Path to the dot executable. Use this option in case {@link #createImage}
+   * is set to {@code true} and the dot executable is not on the system {@code PATH}.
    *
    * @since 1.0.0
    */
@@ -200,8 +202,8 @@ abstract class AbstractGraphMojo extends AbstractMojo {
   private String customStyleConfiguration;
 
   /**
-   * Only relevant when {@code graphFormat=dot}: If set to {@code true} the effective style configuration used to
-   * create this graph will be printed on the console.
+   * Only relevant when {@code graphFormat=dot}: If set to {@code true} the effective style configuration used to create
+   * this graph will be printed on the console.
    *
    * @since 2.0.0
    */
@@ -239,10 +241,15 @@ abstract class AbstractGraphMojo extends AbstractMojo {
 
     try {
       GraphFactory graphFactory = createGraphFactory(globalFilter, targetFilter, graphStyleConfigurer);
-      writeGraphFile(graphFactory.createGraph(this.project), graphFilePath);
+      String graph = graphFactory.createGraph(this.project);
+      writeGraphFile(graph, graphFilePath);
 
       if (this.createImage && graphFormat == GraphFormat.DOT) {
         createDotGraphImage(graphFilePath);
+      }
+
+      if (graphFormat == GraphFormat.JSON) {
+        createInteractiveFiles(graphFilePath, graph);
       }
 
     } catch (DependencyGraphException e) {
@@ -302,6 +309,8 @@ abstract class AbstractGraphMojo extends AbstractMojo {
         return new GmlGraphStyleConfigurer();
       case PUML:
         return new PumlGraphStyleConfigurer();
+      case JSON:
+        return new JsonGraphStyleConfigurer();
       default:
         throw new IllegalArgumentException("Unsupported output format: " + graphFormat);
     }
@@ -386,6 +395,24 @@ abstract class AbstractGraphMojo extends AbstractMojo {
     try (Writer writer = Files.newBufferedWriter(graphFilePath, StandardCharsets.UTF_8)) {
       writer.write(graph);
     }
+  }
+
+  private void createInteractiveFiles(Path jsonFileName, String graph) throws IOException {
+    Path reportDirectory = this.project.getBasedir().toPath()
+        .resolve(this.project.getBuild().getDirectory())
+        .resolve("depgraph-interactive");
+
+    Files.createDirectories(reportDirectory);
+    Path graphJsonpFile = reportDirectory.resolve("graph.jsonp");
+
+    String graphJsonp = "var graph = \n" + graph;
+
+    try (Writer writer = Files.newBufferedWriter(graphJsonpFile, StandardCharsets.UTF_8)) {
+      writer.write(graphJsonp);
+    }
+
+    FileUtils.copyURLToFile(AbstractGraphMojo.class.getResource("/interactive/index.html"), reportDirectory.resolve("index.html").toFile());
+    FileUtils.copyURLToFile(AbstractGraphMojo.class.getResource("/interactive/main.js"), reportDirectory.resolve("main.js").toFile());
   }
 
   private void createDotGraphImage(Path graphFilePath) throws IOException {

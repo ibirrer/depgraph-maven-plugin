@@ -23,6 +23,7 @@ import com.google.common.base.Joiner;
 public enum NodeIdRenderers implements NodeRenderer<DependencyNode> {
 
   GROUP_ID {
+
     @Override
     public String render(DependencyNode node) {
       return node.getArtifact().getGroupId();
@@ -30,6 +31,7 @@ public enum NodeIdRenderers implements NodeRenderer<DependencyNode> {
   },
 
   GROUP_ID_WITH_SCOPE {
+
     @Override
     public String render(DependencyNode node) {
       Artifact artifact = node.getArtifact();
@@ -38,6 +40,7 @@ public enum NodeIdRenderers implements NodeRenderer<DependencyNode> {
   },
 
   VERSIONLESS_ID {
+
     @Override
     public String render(DependencyNode node) {
       Artifact artifact = node.getArtifact();
@@ -50,20 +53,32 @@ public enum NodeIdRenderers implements NodeRenderer<DependencyNode> {
     }
   },
 
+  ID {
+
+    @Override
+    public String render(DependencyNode node) {
+      Artifact artifact = node.getArtifact();
+      return COLON_JOINER.join(
+          artifact.getGroupId(),
+          artifact.getArtifactId(),
+          artifact.getVersion(),
+          artifact.getType(),
+          artifact.getClassifier());
+    }
+  },
+
   VERSIONLESS_ID_WITH_SCOPE {
+
     @Override
     public String render(DependencyNode node) {
       Artifact artifact = node.getArtifact();
 
-      return COLON_JOINER.join(
-          artifact.getGroupId(),
-          artifact.getArtifactId(),
-          artifact.getType(),
-          artifact.getClassifier(),
-          artifact.getScope());
+      return COLON_JOINER.join(artifact.getGroupId(), artifact.getArtifactId(), artifact.getType(), artifact.getClassifier(), artifact.getScope());
     }
 
   };
+
+  public static int nextId = 0;
 
   private static final Joiner COLON_JOINER = Joiner.on(":").useForNull("");
 }
