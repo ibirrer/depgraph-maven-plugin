@@ -104,6 +104,12 @@ Since the generated dependency graph does not store any layout information, you 
 - Choose *Tools -> Fit Node To Label* and press *OK* in the upcoming dialog
 - Choose your layout algorithm in the *Layout* menu to layout the graph
 
+### Interactive Graph in Browser
+The JSON graph format (set the `graphFormat` property to `json`) generates a html file that allows
+to interactively browse a dependency graph. 
+
+Example: https://ibirrer.github.io/depgraph-maven-plugin/interactive/index.html
+
 ## FAQ
 
 Q: Help! The dependency graph of my 10 year old 100-module enterprise project looks like a ball of wool. I can't see anything!
