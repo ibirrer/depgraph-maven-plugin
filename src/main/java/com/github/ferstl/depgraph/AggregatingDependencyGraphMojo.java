@@ -25,10 +25,11 @@ import com.github.ferstl.depgraph.dependency.DependencyNode;
 import com.github.ferstl.depgraph.dependency.GraphFactory;
 import com.github.ferstl.depgraph.dependency.GraphStyleConfigurer;
 import com.github.ferstl.depgraph.dependency.MavenGraphAdapter;
+import com.github.ferstl.depgraph.dependency.NodeResolution;
 import com.github.ferstl.depgraph.graph.GraphBuilder;
-
 import static com.github.ferstl.depgraph.dependency.NodeIdRenderers.VERSIONLESS_ID;
 import static com.github.ferstl.depgraph.dependency.NodeIdRenderers.VERSIONLESS_ID_WITH_SCOPE;
+import static java.util.EnumSet.allOf;
 
 /**
  * Aggregates all dependencies of a multi-module project into one single graph.
@@ -60,8 +61,8 @@ public class AggregatingDependencyGraphMojo extends AbstractAggregatingGraphMojo
   boolean showVersions;
 
   /**
-   * If set to {@code true}, all parent modules (&lt;packaging&gt;pom&lt;/packaging&gt) will be shown with a dotted
-   * arrow pointing to their child modules.
+   * If set to {@code true}, all parent modules (&lt;packaging&gt;pom&lt;/packaging&gt) will be shown with a dotted arrow
+   * pointing to their child modules.
    *
    * @since 1.0.0
    */
@@ -79,6 +80,12 @@ public class AggregatingDependencyGraphMojo extends AbstractAggregatingGraphMojo
         .configure(GraphBuilder.<DependencyNode>create(this.mergeScopes ? VERSIONLESS_ID : VERSIONLESS_ID_WITH_SCOPE));
 
     MavenGraphAdapter adapter = new MavenGraphAdapter(this.dependencyGraphBuilder, targetFilter);
+
+    if (GraphFormat.forName(this.graphFormat) == GraphFormat.JSON) {
+      adapter = new MavenGraphAdapter(this.dependencyTreeBuilder, this.localRepository, targetFilter, allOf(NodeResolution.class));
+    }
+
+
     return new AggregatingGraphFactory(adapter, globalFilter, graphBuilder, this.includeParentProjects);
   }
 }

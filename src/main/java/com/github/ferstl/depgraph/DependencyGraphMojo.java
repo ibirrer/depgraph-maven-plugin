@@ -28,7 +28,6 @@ import com.github.ferstl.depgraph.dependency.MavenGraphAdapter;
 import com.github.ferstl.depgraph.dependency.NodeResolution;
 import com.github.ferstl.depgraph.dependency.SimpleGraphFactory;
 import com.github.ferstl.depgraph.graph.GraphBuilder;
-
 import static com.github.ferstl.depgraph.dependency.NodeIdRenderers.VERSIONLESS_ID;
 import static java.util.EnumSet.allOf;
 import static java.util.EnumSet.complementOf;
@@ -56,8 +55,8 @@ public class DependencyGraphMojo extends AbstractGraphMojo {
 
   /**
    * If set to {@code true}, the created graph will show version information an all artifacts. Depending on the flags
-   * {@link #showDuplicates} and {@link #showConflicts}, the version will either be shown directly in the artifact
-   * nodes or on the dependency edges.
+   * {@link #showDuplicates} and {@link #showConflicts}, the version will either be shown directly in the artifact nodes
+   * or on the dependency edges.
    *
    * @since 1.0.0
    */
@@ -65,9 +64,9 @@ public class DependencyGraphMojo extends AbstractGraphMojo {
   boolean showVersions;
 
   /**
-   * If set to {@code true}, the graph will additionally contain conflicting dependencies. Note that the dependency
-   * graph may not be 100% accurate when this flag is enabled and the plugin is executed with a Maven version greater
-   * or equal 3.0!
+   * If set to {@code true}, the graph will additionally contain conflicting dependencies. Note that the dependency graph
+   * may not be 100% accurate when this flag is enabled and the plugin is executed with a Maven version greater or equal
+   * 3.0!
    *
    * @since 1.0.0
    */
@@ -76,8 +75,8 @@ public class DependencyGraphMojo extends AbstractGraphMojo {
 
   /**
    * If set to {@code true}, the graph will additionally contain duplicate dependencies. Note that the dependency graph
-   * may not be 100% accurate when this flag is enabled and the plugin is executed with a Maven version greater or
-   * equal 3.0!
+   * may not be 100% accurate when this flag is enabled and the plugin is executed with a Maven version greater or equal
+   * 3.0!
    *
    * @since 1.0.0
    */
@@ -116,6 +115,6 @@ public class DependencyGraphMojo extends AbstractGraphMojo {
   }
 
   private boolean requiresFullGraph() {
-    return this.showConflicts || this.showDuplicates;
+    return this.showConflicts || this.showDuplicates || GraphFormat.forName(this.graphFormat) == GraphFormat.JSON;
   }
 }

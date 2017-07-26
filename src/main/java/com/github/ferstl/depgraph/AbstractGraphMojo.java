@@ -122,7 +122,7 @@ abstract class AbstractGraphMojo extends AbstractMojo {
    * @since 2.1.0
    */
   @Parameter(property = "graphFormat", defaultValue = "dot")
-  private String graphFormat;
+  String graphFormat;
 
   /**
    * The path to the generated output file. A file extension matching the configured {@code graphFormat} will be added if

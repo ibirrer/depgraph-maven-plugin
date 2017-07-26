@@ -194,6 +194,25 @@ public class DocumentationIntegrationTest {
     collectFile("sub-parent/module-3/target/dependency-graph.gml", "with-conflicts.gml");
   }
 
+  @Test
+  public void jsonWithConflicts() throws Exception {
+    runTest("graph",
+        "-DgraphFormat=json",
+        "-DshowVersions=true",
+        "-DshowDuplicates=true",
+        "-DshowConflicts=true");
+
+    assertFilesPresent(
+        this.basedir,
+        "module-1/target/dependency-graph.json",
+        "module-2/target/dependency-graph.json",
+        "sub-parent/module-3/target/dependency-graph.json",
+        "target/dependency-graph.json",
+        "sub-parent/target/dependency-graph.json");
+
+    collectFile("sub-parent/module-3/target/dependency-graph.json", "with-conflicts.json");
+  }
+
   private void runTest(String goal, String... cliOptions) throws Exception {
     File basedir = getBaseDir();
     MavenExecution execution = this.mavenRuntime.forProject(basedir);
